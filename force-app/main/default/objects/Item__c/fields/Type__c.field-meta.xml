@@ -10,9 +10,24 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Type 1, Type 2, Type 3, Type 4</fullName>
+                <fullName>Type 1</fullName>
                 <default>false</default>
-                <label>Type 1, Type 2, Type 3, Type 4</label>
+                <label>Type 1</label>
+            </value>
+            <value>
+                <fullName>Type 2</fullName>
+                <default>false</default>
+                <label>Type 2</label>
+            </value>
+            <value>
+                <fullName>Type 3</fullName>
+                <default>false</default>
+                <label>Type 3</label>
+            </value>
+            <value>
+                <fullName>Type 4</fullName>
+                <default>false</default>
+                <label>Type 4</label>
             </value>
         </valueSetDefinition>
     </valueSet>

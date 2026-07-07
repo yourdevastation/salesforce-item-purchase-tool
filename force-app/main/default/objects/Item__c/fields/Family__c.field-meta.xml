@@ -10,9 +10,24 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Family 1, Family 2</fullName>
+                <fullName>Family 1</fullName>
                 <default>false</default>
-                <label>Family 1, Family 2</label>
+                <label>Family 1</label>
+            </value>
+            <value>
+                <fullName>Family 2</fullName>
+                <default>false</default>
+                <label>Family 2</label>
+            </value>
+            <value>
+                <fullName>Family 3</fullName>
+                <default>false</default>
+                <label>Family 3</label>
+            </value>
+            <value>
+                <fullName>Family 4</fullName>
+                <default>false</default>
+                <label>Family 4</label>
             </value>
         </valueSetDefinition>
     </valueSet>

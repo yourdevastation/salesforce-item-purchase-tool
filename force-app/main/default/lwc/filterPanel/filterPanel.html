@@ -1,0 +1,30 @@
+<template>
+  <lightning-card title="Filters" icon-name="standard:filter">
+    <div class="slds-p-horizontal_medium">
+      <div
+        class="slds-m-bottom_medium slds-text-heading_small slds-text-color_success"
+      >
+        <strong>Items Found: {itemCount}</strong>
+      </div>
+
+      <lightning-combobox
+        name="typeFilter"
+        label="Type"
+        value=""
+        options={typeOptions}
+        onchange={handleTypeChange}
+        class="slds-m-bottom_small"
+      >
+      </lightning-combobox>
+
+      <lightning-combobox
+        name="familyFilter"
+        label="Family"
+        value=""
+        options={familyOptions}
+        onchange={handleFamilyChange}
+      >
+      </lightning-combobox>
+    </div>
+  </lightning-card>
+</template>
