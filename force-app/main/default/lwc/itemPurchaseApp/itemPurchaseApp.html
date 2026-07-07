@@ -1,10 +1,15 @@
 <template>
-  <lightning-card title="Item Purchase Tool">
-    <div class="slds-m-around_medium">
-      <p>
-        Welcome to the store! The selected Account ID is:
-        <strong>{accountId}</strong>
-      </p>
-    </div>
-  </lightning-card>
+  <div class="slds-m-around_medium">
+    <template if:true={accountId}>
+      <c-account-summary account-id={accountId}></c-account-summary>
+    </template>
+
+    <template if:false={accountId}>
+      <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+        <h2>
+          No Account ID provided. Please open this app from an Account record.
+        </h2>
+      </div>
+    </template>
+  </div>
 </template>
