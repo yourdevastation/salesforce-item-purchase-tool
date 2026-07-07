@@ -1,0 +1,36 @@
+<template>
+  <div class="slds-box slds-theme_default slds-m-bottom_medium">
+    <lightning-record-view-form record-id={accountId} object-api-name="Account">
+      <div class="slds-grid slds-gutters slds-align-middle">
+        <div class="slds-col slds-size_1-of-5"></div>
+
+        <div class="slds-col slds-size_1-of-5 slds-text-align_center">
+          <lightning-output-field
+            field-name="Name"
+            variant="label-hidden"
+          ></lightning-output-field>
+        </div>
+        <div class="slds-col slds-size_1-of-5 slds-text-align_center">
+          <lightning-output-field
+            field-name="AccountNumber"
+            variant="label-hidden"
+          ></lightning-output-field>
+        </div>
+        <div class="slds-col slds-size_1-of-5 slds-text-align_center">
+          <lightning-output-field
+            field-name="Industry"
+            variant="label-hidden"
+          ></lightning-output-field>
+        </div>
+
+        <div class="slds-col slds-size_1-of-5 slds-text-align_right">
+          <lightning-button
+            label="Cart"
+            icon-name="utility:cart"
+            variant="brand"
+          ></lightning-button>
+        </div>
+      </div>
+    </lightning-record-view-form>
+  </div>
+</template>
