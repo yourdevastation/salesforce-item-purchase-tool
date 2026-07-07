@@ -2,6 +2,7 @@
   <div class="slds-m-around_medium">
     <template if:true={accountId}>
       <c-account-summary account-id={accountId}></c-account-summary>
+      <c-item-catalog></c-item-catalog>
     </template>
 
     <template if:false={accountId}>

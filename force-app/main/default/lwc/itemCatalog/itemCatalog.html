@@ -1,0 +1,38 @@
+<template>
+  <div class="slds-grid slds-gutters slds-m-top_medium">
+    <div class="slds-col slds-size_3-of-4">
+      <c-search-bar onsearch={handleSearch}></c-search-bar>
+
+      <template if:true={hasItems}>
+        <div class="slds-grid slds-wrap slds-m-top_medium">
+          <template for:each={items} for:item="item">
+            <div
+              key={item.id}
+              class="slds-col slds-size_1-of-3 slds-p-bottom_medium"
+            >
+              <c-item-tile item={item}></c-item-tile>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <template if:false={hasItems}>
+        <div
+          class="slds-box slds-theme_shade slds-text-align_center slds-m-top_small"
+        >
+          <p class="slds-text-heading_small slds-text-color_weak">
+            No items found matching your criteria.
+          </p>
+        </div>
+      </template>
+    </div>
+
+    <div class="slds-col slds-size_1-of-4">
+      <c-filter-panel
+        item-count={itemCount}
+        onfilterchange={handleFilterChange}
+      >
+      </c-filter-panel>
+    </div>
+  </div>
+</template>

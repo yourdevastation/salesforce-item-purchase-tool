@@ -1,0 +1,37 @@
+<template>
+  <lightning-card title={item.name}>
+    <div class="slds-p-horizontal_small slds-text-align_center">
+      <img
+        src={item.image}
+        alt={item.name}
+        class="slds-m-bottom_small"
+        style="max-height: 150px; object-fit: cover"
+      />
+
+      <p class="slds-truncate" title={item.description}>{item.description}</p>
+
+      <p
+        class="slds-m-top_small slds-text-heading_small slds-text-color_success"
+      >
+        <strong>{formattedPrice}</strong>
+      </p>
+    </div>
+
+    <div slot="footer" class="slds-grid slds-grid_align-space">
+      <lightning-button
+        label="Details"
+        variant="neutral"
+        onclick={handleDetailsClick}
+      >
+      </lightning-button>
+
+      <lightning-button
+        label="Add"
+        variant="brand"
+        disabled={item.isOutOfStock}
+        onclick={handleAddClick}
+      >
+      </lightning-button>
+    </div>
+  </lightning-card>
+</template>
