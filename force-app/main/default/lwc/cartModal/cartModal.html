@@ -1,0 +1,137 @@
+<template>
+  <lightning-modal-header label="Cart"></lightning-modal-header>
+
+  <lightning-modal-body>
+    <template if:true={isCartEmpty}>
+      <div
+        class="slds-text-align_center slds-p-around_large slds-text-color_weak"
+      >
+        <lightning-icon
+          icon-name="utility:cart"
+          size="large"
+          class="slds-m-bottom_small"
+        ></lightning-icon>
+        <p class="slds-text-heading_small">Your cart is empty.</p>
+      </div>
+    </template>
+
+    <template if:false={isCartEmpty}>
+      <table
+        class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered"
+      >
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th scope="col" style="width: 40%">
+              <div class="slds-truncate" title="Item Name">Item Name</div>
+            </th>
+            <th scope="col">
+              <div class="slds-truncate" title="Unit Price">Unit Price</div>
+            </th>
+            <th scope="col">
+              <div class="slds-truncate slds-text-align_center" title="Qty">
+                Qty
+              </div>
+            </th>
+            <th scope="col">
+              <div class="slds-truncate" title="Total">Total</div>
+            </th>
+            <th scope="col" style="width: 50px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <template for:each={flatCartItems} for:item="row">
+            <tr key={row.id}>
+              <td>
+                <div class="slds-truncate" title={row.name}>{row.name}</div>
+              </td>
+              <td>
+                <lightning-formatted-number
+                  value={row.price}
+                  format-style="currency"
+                  currency-code="USD"
+                ></lightning-formatted-number>
+              </td>
+              <td>
+                <div class="slds-grid slds-grid_align-center slds-align-middle">
+                  <lightning-button-icon
+                    icon-name="utility:dash"
+                    data-id={row.id}
+                    onclick={handleMinus}
+                    variant="border-filled"
+                    size="small"
+                  ></lightning-button-icon>
+
+                  <lightning-input
+                    type="number"
+                    value={row.quantity}
+                    data-id={row.id}
+                    onchange={handleInputChange}
+                    variant="label-hidden"
+                    class="slds-m-horizontal_xx-small"
+                    style="width: 60px; text-align: center"
+                    min="1"
+                    max={row.availableQuantity}
+                  >
+                  </lightning-input>
+
+                  <lightning-button-icon
+                    icon-name="utility:add"
+                    data-id={row.id}
+                    onclick={handlePlus}
+                    disabled={row.isMaxReached}
+                    variant="border-filled"
+                    size="small"
+                  ></lightning-button-icon>
+                </div>
+              </td>
+              <td>
+                <strong
+                  ><lightning-formatted-number
+                    value={row.totalPrice}
+                    format-style="currency"
+                    currency-code="USD"
+                  ></lightning-formatted-number
+                ></strong>
+              </td>
+              <td>
+                <lightning-button-icon
+                  icon-name="utility:delete"
+                  data-id={row.id}
+                  onclick={handleDelete}
+                  variant="bare"
+                  icon-class="slds-icon-text-error"
+                  title="Remove"
+                ></lightning-button-icon>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+
+      <div
+        class="slds-m-top_medium slds-text-align_right slds-text-heading_small slds-p-right_small"
+      >
+        <strong>Grand Total: </strong>
+        <lightning-formatted-number
+          value={grandTotal}
+          format-style="currency"
+          currency-code="USD"
+        ></lightning-formatted-number>
+      </div>
+    </template>
+  </lightning-modal-body>
+
+  <lightning-modal-footer>
+    <lightning-button
+      label="Continue Shopping"
+      onclick={handleClose}
+      class="slds-m-right_small"
+    ></lightning-button>
+    <lightning-button
+      label="Checkout"
+      variant="brand"
+      onclick={handleCheckout}
+      disabled={isCartEmpty}
+    ></lightning-button>
+  </lightning-modal-footer>
+</template>
