@@ -15,6 +15,8 @@ public with sharing class ItemDTO {
   public Decimal price { get; set; }
   @AuraEnabled
   public Decimal availableQuantity { get; set; }
+  @AuraEnabled
+  public Boolean isOutOfStock { get; set; }
 
   public ItemDTO(Item__c item) {
     this.id = item.Id;
@@ -25,5 +27,6 @@ public with sharing class ItemDTO {
     this.image = item.Image__c;
     this.price = item.Price__c;
     this.availableQuantity = item.AvailableQuantity__c;
+    this.isOutOfStock = (item.AvailableQuantity__c == 0);
   }
 }

@@ -1,4 +1,5 @@
 import { LightningElement, api } from "lwc";
+import ItemDetailsModal from "c/itemDetailsModal";
 
 export default class ItemTile extends LightningElement {
   @api item;
@@ -7,11 +8,28 @@ export default class ItemTile extends LightningElement {
     return this.item && this.item.price ? `$${this.item.price}` : "$0.00";
   }
 
-  handleDetailsClick() {
-    console.log("Details clicked for:", this.item.name);
+  async handleDetailsClick() {
+    const result = await ItemDetailsModal.open({
+      size: "small",
+      description: "Item Details Modal",
+      recordId: this.item.id,
+      item: this.item
+    });
+
+    if (result && result.action === "add") {
+      this.dispatchEvent(
+        new CustomEvent("addtocart", {
+          detail: { item: result.item }
+        })
+      );
+    }
   }
 
   handleAddClick() {
-    console.log("Add to cart clicked for:", this.item.name);
+    this.dispatchEvent(
+      new CustomEvent("addtocart", {
+        detail: { item: this.item }
+      })
+    );
   }
 }

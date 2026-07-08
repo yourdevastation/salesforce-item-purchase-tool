@@ -1,8 +1,32 @@
 <template>
   <div class="slds-m-around_medium">
     <template if:true={accountId}>
-      <c-account-summary account-id={accountId}></c-account-summary>
-      <c-item-catalog></c-item-catalog>
+      <div
+        class="slds-box slds-theme_default slds-m-bottom_medium slds-grid slds-align-middle slds-grid_align-spread"
+      >
+        <div>
+          <lightning-button
+            label="Create Item"
+            variant="neutral"
+          ></lightning-button>
+        </div>
+
+        <div class="slds-col slds-grow">
+          <c-account-summary account-id={accountId}></c-account-summary>
+        </div>
+
+        <div class="slds-grid slds-align-middle">
+          <lightning-button
+            label={cartButtonLabel}
+            icon-name="utility:cart"
+            variant="brand"
+            onclick={openCartModal}
+          >
+          </lightning-button>
+        </div>
+      </div>
+
+      <c-item-catalog onaddtocart={handleAddToCart}></c-item-catalog>
     </template>
 
     <template if:false={accountId}>

@@ -37,4 +37,12 @@ export default class ItemCatalog extends LightningElement {
       this.family = value;
     }
   }
+
+  handleAddToCart(event) {
+    this.dispatchEvent(
+      new CustomEvent("addtocart", {
+        detail: event.detail
+      })
+    );
+  }
 }
