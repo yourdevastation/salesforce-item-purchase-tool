@@ -11,4 +11,15 @@ public with sharing class ItemPurchaseController {
       throw new AuraHandledException(e.getMessage());
     }
   }
+
+  @AuraEnabled
+  public static Id checkout(Id accountId, List<CartLineDTO> cartLines) {
+    try {
+      return CheckoutService.processCheckout(accountId, cartLines);
+    } catch (CheckoutExceptions.CheckoutException e) {
+      throw new AuraHandledException(e.getMessage());
+    } catch (Exception e) {
+      throw new AuraHandledException('Internal error during checkout');
+    }
+  }
 }
