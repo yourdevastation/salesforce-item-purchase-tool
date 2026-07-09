@@ -34,4 +34,13 @@ public with sharing class ItemSelector {
 
     return Database.queryWithBinds(query, binds, AccessLevel.USER_MODE);
   }
+
+  public List<Item__c> getItemsForUpdate(Set<Id> itemIds) {
+    return [
+      SELECT Id, Name, AvailableQuantity__c, Price__c
+      FROM Item__c
+      WHERE Id IN :itemIds
+      FOR UPDATE
+    ];
+  }
 }

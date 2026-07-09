@@ -1,9 +1,11 @@
 import { LightningElement, wire } from "lwc";
-import { CurrentPageReference } from "lightning/navigation";
+import { CurrentPageReference, NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import CartModal from "c/cartModal";
 
-export default class ItemPurchaseApp extends LightningElement {
+import checkout from "@salesforce/apex/ItemPurchaseController.checkout";
+
+export default class ItemPurchaseApp extends NavigationMixin(LightningElement) {
   accountId;
 
   @wire(CurrentPageReference)
@@ -114,11 +116,36 @@ export default class ItemPurchaseApp extends LightningElement {
     });
 
     if (result && result.action === "checkout") {
-      this.showToast(
-        "Checkout Initiated",
-        "Ready to process the order.",
-        "success"
-      );
+      this.processCheckout(result.cartItems);
+    }
+  }
+
+  async processCheckout(itemsToCheckout) {
+    try {
+      const cartLinesDto = itemsToCheckout.map((cartObj) => ({
+        id: cartObj.id,
+        quantity: cartObj.quantity
+      }));
+
+      const purchaseId = await checkout({
+        accountId: this.accountId,
+        cartLines: cartLinesDto
+      });
+
+      this.showToast("Success", "Order placed successfully!", "success");
+      this.cartItems = [];
+
+      this[NavigationMixin.Navigate]({
+        type: "standard__recordPage",
+        attributes: {
+          recordId: purchaseId,
+          objectApiName: "Purchase__c",
+          actionName: "view"
+        }
+      });
+    } catch (error) {
+      const errorMessage = error.body ? error.body.message : error.message;
+      this.showToast("Checkout Failed", errorMessage, "error");
     }
   }
 }
