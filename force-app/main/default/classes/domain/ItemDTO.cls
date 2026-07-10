@@ -29,4 +29,7 @@ public with sharing class ItemDTO {
     this.availableQuantity = item.AvailableQuantity__c;
     this.isOutOfStock = (item.AvailableQuantity__c == 0);
   }
+
+  public ItemDTO() {
+  }
 }

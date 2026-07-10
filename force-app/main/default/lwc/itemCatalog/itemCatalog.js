@@ -1,10 +1,12 @@
-import { LightningElement, wire } from "lwc";
+import { LightningElement, wire, api } from "lwc";
+import { refreshApex } from "@salesforce/apex";
 import getItems from "@salesforce/apex/ItemPurchaseController.getItems";
 
 export default class ItemCatalog extends LightningElement {
   searchTerm = "";
   type = "";
   family = "";
+  isLoading = false;
 
   @wire(getItems, {
     type: "$type",
@@ -23,6 +25,16 @@ export default class ItemCatalog extends LightningElement {
 
   get hasItems() {
     return this.items.length > 0;
+  }
+
+  @api
+  async refreshList() {
+    this.isLoading = true;
+    try {
+      await refreshApex(this.itemsWire);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   handleSearch(event) {

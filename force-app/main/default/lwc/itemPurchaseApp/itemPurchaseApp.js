@@ -2,11 +2,19 @@ import { LightningElement, wire } from "lwc";
 import { CurrentPageReference, NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import CartModal from "c/cartModal";
+import ItemCreateModal from "c/itemCreateModal";
 
 import checkout from "@salesforce/apex/ItemPurchaseController.checkout";
+import createItemWithImage from "@salesforce/apex/ItemPurchaseController.createItemWithImage";
+
+import USER_ID from "@salesforce/user/Id";
+import { getRecord, getFieldValue } from "lightning/uiRecordApi";
+import IS_MANAGER_FIELD from "@salesforce/schema/User.IsManager__c";
 
 export default class ItemPurchaseApp extends NavigationMixin(LightningElement) {
   accountId;
+  cartItems = [];
+  isManager = false;
 
   @wire(CurrentPageReference)
   getStateParameters(currentPageReference) {
@@ -15,7 +23,15 @@ export default class ItemPurchaseApp extends NavigationMixin(LightningElement) {
     }
   }
 
-  cartItems = [];
+  @wire(getRecord, { recordId: USER_ID, fields: [IS_MANAGER_FIELD] })
+  wiredUser({ error, data }) {
+    if (data) {
+      this.isManager = getFieldValue(data, IS_MANAGER_FIELD);
+    } else if (error) {
+      console.error("Error fetching user data", error);
+      this.showToast("Error", "Failed to verify user permissions", "error");
+    }
+  }
 
   get cartItemCount() {
     return this.cartItems.reduce(
@@ -146,6 +162,39 @@ export default class ItemPurchaseApp extends NavigationMixin(LightningElement) {
     } catch (error) {
       const errorMessage = error.body ? error.body.message : error.message;
       this.showToast("Checkout Failed", errorMessage, "error");
+    }
+  }
+
+  async handleCreateItemClick() {
+    const result = await ItemCreateModal.open({
+      size: "medium",
+      description: "Create New Item Modal"
+    });
+
+    if (result && result.action === "createitem") {
+      this.processItemCreation(result.data);
+    }
+  }
+
+  async processItemCreation(itemData) {
+    try {
+      this.showToast(
+        "Processing",
+        "Sending request to Unsplash and saving...",
+        "info"
+      );
+
+      await createItemWithImage({ itemDto: itemData });
+
+      this.showToast(
+        "Success",
+        `Item "${itemData.name}" created successfully!`,
+        "success"
+      );
+      await this.template.querySelector("c-item-catalog").refreshList();
+    } catch (error) {
+      const errorMessage = error.body ? error.body.message : error.message;
+      this.showToast("Create Failed", errorMessage, "error");
     }
   }
 }

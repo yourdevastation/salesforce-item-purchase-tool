@@ -22,4 +22,13 @@ public with sharing class ItemPurchaseController {
       throw new AuraHandledException('Internal error during checkout');
     }
   }
+
+  @AuraEnabled
+  public static void createItemWithImage(ItemDTO itemDto) {
+    try {
+      ItemCatalogService.createNewItem(itemDto);
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }
