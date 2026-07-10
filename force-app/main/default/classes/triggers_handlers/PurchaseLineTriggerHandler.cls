@@ -1,3 +1,8 @@
+/**
+ * Declared as 'without sharing' intentionally to ensure that roll-up calculations
+ * (Total Items, Grand Total) on the parent Purchase__c always succeed,
+ * even if the current user has limited sharing access to the parent record.
+ */
 public without sharing class PurchaseLineTriggerHandler {
   public static void recalculateTotals(
     List<PurchaseLine__c> records,

@@ -8,4 +8,12 @@ public class CheckoutExceptions {
   }
   public class InsufficientStockException extends CheckoutException {
   }
+  public class InvalidQuantityException extends CheckoutException {
+  }
+  public class AccountIdMissingException extends CheckoutException {
+  }
+  public class CartLimitExceededException extends CheckoutException {
+  }
+  public class InvalidAccountIdException extends CheckoutException {
+  }
 }

@@ -5,9 +5,17 @@ public with sharing class ItemCatalogService {
   public static List<ItemDTO> getFilteredItems(
     String type,
     String family,
-    String searchTerm
+    String searchTerm,
+    Integer limitSize,
+    Integer offsetSize
   ) {
-    List<Item__c> items = selector.getItemsByFilters(type, family, searchTerm);
+    List<Item__c> items = selector.getItemsByFilters(
+      type,
+      family,
+      searchTerm,
+      limitSize,
+      offsetSize
+    );
     List<ItemDTO> dtos = new List<ItemDTO>();
 
     for (Item__c item : items) {
@@ -38,6 +46,10 @@ public with sharing class ItemCatalogService {
       Image__c = imageUrl
     );
 
-    insert newItem;
+    SObjectAccessDecision decision = Security.stripInaccessible(
+      AccessType.CREATABLE,
+      new List<Item__c>{ newItem }
+    );
+    Database.insert(decision.getRecords(), AccessLevel.USER_MODE);
   }
 }

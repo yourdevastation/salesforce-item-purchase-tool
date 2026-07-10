@@ -3,10 +3,18 @@ public with sharing class ItemPurchaseController {
   public static List<ItemDTO> getItems(
     String type,
     String family,
-    String searchTerm
+    String searchTerm,
+    Integer limitSize,
+    Integer offsetSize
   ) {
     try {
-      return ItemCatalogService.getFilteredItems(type, family, searchTerm);
+      return ItemCatalogService.getFilteredItems(
+        type,
+        family,
+        searchTerm,
+        limitSize,
+        offsetSize
+      );
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
@@ -30,5 +38,10 @@ public with sharing class ItemPurchaseController {
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static Boolean checkManagerAccess() {
+    return SecurityService.canManageCatalog(UserInfo.getUserId());
   }
 }

@@ -1,7 +1,21 @@
 public with sharing class CheckoutService {
   private static ItemSelector itemSelector = new ItemSelector();
+  private static AccountSelector accountSelector = new AccountSelector(); // <-- Наш новый селектор
 
   public static Id processCheckout(Id accountId, List<CartLineDTO> cartLines) {
+    if (String.isNotBlank(accountId)) {
+      List<Account> accounts = accountSelector.getAccountByIdSafe(accountId);
+      if (accounts.isEmpty()) {
+        throw new CheckoutExceptions.InvalidAccountIdException(
+          'Invalid Account or you do not have access to it.'
+        );
+      }
+    } else {
+      throw new CheckoutExceptions.AccountIdMissingException(
+        'Account is required to checkout.'
+      );
+    }
+
     if (cartLines == null || cartLines.isEmpty()) {
       throw new CheckoutExceptions.EmptyCartException(
         'Cart is empty. Cannot proceed with checkout.'
@@ -13,6 +27,12 @@ public with sharing class CheckoutService {
     for (CartLineDTO line : cartLines) {
       itemIds.add(line.id);
       requestedQuantities.put(line.id, line.quantity);
+    }
+
+    if (itemIds.size() > 100) {
+      throw new CheckoutExceptions.CartLimitExceededException(
+        'Cart is too large. Maximum 100 distinct items allowed.'
+      );
     }
 
     Map<Id, Item__c> dbItems = new Map<Id, Item__c>(
@@ -29,6 +49,14 @@ public with sharing class CheckoutService {
       if (dbItem == null) {
         throw new CheckoutExceptions.ItemNotFoundException(
           'Item ' + itemId + ' no longer exists.'
+        );
+      }
+
+      if (reqQty == null || reqQty <= 0) {
+        throw new CheckoutExceptions.InvalidQuantityException(
+          'Invalid quantity for item ' +
+            dbItem.Name +
+            '. Quantity must be greater than zero.'
         );
       }
 
