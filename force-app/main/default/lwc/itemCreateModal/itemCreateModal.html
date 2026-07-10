@@ -1,0 +1,55 @@
+<template>
+  <lightning-modal-header label="Create New Item"></lightning-modal-header>
+
+  <lightning-modal-body>
+    <lightning-record-edit-form
+      object-api-name={objectApiName}
+      onsubmit={handleSubmit}
+    >
+      <lightning-messages></lightning-messages>
+
+      <div class="slds-grid slds-wrap slds-gutters">
+        <div class="slds-col slds-size_1-of-2">
+          <lightning-input-field
+            field-name={fields.name}
+            required
+          ></lightning-input-field>
+          <lightning-input-field
+            field-name={fields.price}
+            required
+          ></lightning-input-field>
+          <lightning-input-field
+            field-name={fields.quantity}
+            required
+          ></lightning-input-field>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+          <lightning-input-field
+            field-name={fields.type}
+          ></lightning-input-field>
+          <lightning-input-field
+            field-name={fields.family}
+          ></lightning-input-field>
+          <lightning-input-field
+            field-name={fields.description}
+          ></lightning-input-field>
+        </div>
+      </div>
+
+      <button type="submit" class="slds-hide" data-id="hiddenSubmit"></button>
+    </lightning-record-edit-form>
+  </lightning-modal-body>
+
+  <lightning-modal-footer>
+    <lightning-button
+      label="Cancel"
+      onclick={handleClose}
+      class="slds-m-right_small"
+    ></lightning-button>
+    <lightning-button
+      label="Create"
+      variant="brand"
+      onclick={triggerSubmit}
+    ></lightning-button>
+  </lightning-modal-footer>
+</template>

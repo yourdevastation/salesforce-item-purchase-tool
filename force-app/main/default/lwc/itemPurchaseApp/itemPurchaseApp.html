@@ -5,10 +5,13 @@
         class="slds-box slds-theme_default slds-m-bottom_medium slds-grid slds-align-middle slds-grid_align-spread"
       >
         <div>
-          <lightning-button
-            label="Create Item"
-            variant="neutral"
-          ></lightning-button>
+          <template if:true={isManager}>
+            <lightning-button
+              label="Create Item"
+              variant="neutral"
+              onclick={handleCreateItemClick}
+            ></lightning-button>
+          </template>
         </div>
 
         <div class="slds-col slds-grow">
