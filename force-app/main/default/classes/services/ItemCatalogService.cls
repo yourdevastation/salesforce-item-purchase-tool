@@ -1,6 +1,7 @@
 public with sharing class ItemCatalogService {
-  private static ItemSelector selector = new ItemSelector();
-  private static UserSelector userSelector = new UserSelector();
+  private static IItemSelector selector = AppFactory.getItemSelector();
+  private static IUserSelector userSelector = AppFactory.getUserSelector();
+  private static IItemCatalogUnitOfWork unitOfWork = AppFactory.getItemCatalogUnitOfWork();
 
   public static List<ItemDTO> getFilteredItems(
     String type,
@@ -46,10 +47,7 @@ public with sharing class ItemCatalogService {
       Image__c = imageUrl
     );
 
-    SObjectAccessDecision decision = Security.stripInaccessible(
-      AccessType.CREATABLE,
-      new List<Item__c>{ newItem }
-    );
-    Database.insert(decision.getRecords(), AccessLevel.USER_MODE);
+    unitOfWork.registerNew(newItem);
+    unitOfWork.commitWork();
   }
 }

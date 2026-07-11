@@ -1,4 +1,4 @@
-public with sharing class AccountSelector {
+public with sharing class AccountSelector implements IAccountSelector {
   public List<Account> getAccountByIdSafe(Id accountId) {
     return [
       SELECT Id

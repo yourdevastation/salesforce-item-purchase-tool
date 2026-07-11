@@ -1,5 +1,5 @@
 public with sharing class SecurityService {
-  private static UserSelector selector = new UserSelector();
+  private static IUserSelector selector = AppFactory.getUserSelector();
 
   public static Boolean canManageCatalog(Id userId) {
     return selector.isUserManager(userId);

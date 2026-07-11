@@ -1,4 +1,4 @@
-public with sharing class ItemSelector {
+public with sharing class ItemSelector implements IItemSelector {
   public List<Item__c> getItemsByFilters(
     String type,
     String family,

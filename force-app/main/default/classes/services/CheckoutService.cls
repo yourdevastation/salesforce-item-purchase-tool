@@ -1,6 +1,7 @@
 public with sharing class CheckoutService {
-  private static ItemSelector itemSelector = new ItemSelector();
-  private static AccountSelector accountSelector = new AccountSelector(); // <-- Наш новый селектор
+  private static IItemSelector itemSelector = AppFactory.getItemSelector();
+  private static IAccountSelector accountSelector = AppFactory.getAccountSelector();
+  private static ICheckoutUnitOfWork uow = AppFactory.getCheckoutUnitOfWork();
 
   public static Id processCheckout(Id accountId, List<CartLineDTO> cartLines) {
     if (String.isNotBlank(accountId)) {
@@ -39,8 +40,7 @@ public with sharing class CheckoutService {
       itemSelector.getItemsForUpdate(itemIds)
     );
 
-    CheckoutUnitOfWork uow = new CheckoutUnitOfWork();
-    uow.purchaseToInsert = new Purchase__c(ClientId__c = accountId);
+    uow.registerPurchase(new Purchase__c(ClientId__c = accountId));
 
     for (Id itemId : requestedQuantities.keySet()) {
       Item__c dbItem = dbItems.get(itemId);
@@ -75,9 +75,9 @@ public with sharing class CheckoutService {
       }
 
       dbItem.AvailableQuantity__c -= reqQty;
-      uow.itemsToUpdate.add(dbItem);
+      uow.registerItemUpdate(dbItem);
 
-      uow.linesToInsert.add(
+      uow.registerPurchaseLine(
         new PurchaseLine__c(
           ItemId__c = itemId,
           Amount__c = reqQty,
@@ -88,6 +88,6 @@ public with sharing class CheckoutService {
 
     uow.commitWork();
 
-    return uow.purchaseToInsert.Id;
+    return uow.getPurchaseId();
   }
 }
