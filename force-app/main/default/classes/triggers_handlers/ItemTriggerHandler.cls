@@ -1,6 +1,4 @@
 public with sharing class ItemTriggerHandler {
-  private static ItemSelector selector = new ItemSelector();
-
   public static void beforeDelete(List<Item__c> oldItems) {
     preventDeletionWithPurchaseHistory(oldItems);
   }
@@ -8,6 +6,7 @@ public with sharing class ItemTriggerHandler {
   private static void preventDeletionWithPurchaseHistory(
     List<Item__c> itemsToDelete
   ) {
+    IItemSelector selector = AppFactory.getItemSelector();
     Map<Id, Item__c> itemsMap = new Map<Id, Item__c>(itemsToDelete);
 
     List<Item__c> itemsFromDb = selector.getItemsWithPurchaseLines(

@@ -1,8 +1,4 @@
 public with sharing class ItemCatalogService {
-  private static IItemSelector selector = AppFactory.getItemSelector();
-  private static IUserSelector userSelector = AppFactory.getUserSelector();
-  private static IItemCatalogUnitOfWork unitOfWork = AppFactory.getItemCatalogUnitOfWork();
-
   public static List<ItemDTO> getFilteredItems(
     String type,
     String family,
@@ -10,6 +6,8 @@ public with sharing class ItemCatalogService {
     Integer limitSize,
     Integer offsetSize
   ) {
+    IItemSelector selector = AppFactory.getItemSelector();
+
     List<Item__c> items = selector.getItemsByFilters(
       type,
       family,
@@ -27,13 +25,12 @@ public with sharing class ItemCatalogService {
   }
 
   public static void createNewItem(ItemDTO itemDto) {
+    IItemSelector selector = AppFactory.getItemSelector();
+    IItemCatalogUnitOfWork unitOfWork = AppFactory.getItemCatalogUnitOfWork();
+
     Id currentUserId = UserInfo.getUserId();
 
-    if (!userSelector.isUserManager(currentUserId)) {
-      throw new SecurityException(
-        'Access Denied: Only managers can create items.'
-      );
-    }
+    SecurityService.requireCatalogManagerAccess(currentUserId);
 
     String imageUrl = UnsplashImageService.fetchImageUrl(itemDto.name);
 

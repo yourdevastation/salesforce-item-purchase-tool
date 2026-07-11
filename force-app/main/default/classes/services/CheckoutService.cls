@@ -1,9 +1,9 @@
 public with sharing class CheckoutService {
-  private static IItemSelector itemSelector = AppFactory.getItemSelector();
-  private static IAccountSelector accountSelector = AppFactory.getAccountSelector();
-  private static ICheckoutUnitOfWork uow = AppFactory.getCheckoutUnitOfWork();
-
   public static Id processCheckout(Id accountId, List<CartLineDTO> cartLines) {
+    IItemSelector itemSelector = AppFactory.getItemSelector();
+    IAccountSelector accountSelector = AppFactory.getAccountSelector();
+    ICheckoutUnitOfWork uow = AppFactory.getCheckoutUnitOfWork();
+
     if (String.isNotBlank(accountId)) {
       List<Account> accounts = accountSelector.getAccountByIdSafe(accountId);
       if (accounts.isEmpty()) {
