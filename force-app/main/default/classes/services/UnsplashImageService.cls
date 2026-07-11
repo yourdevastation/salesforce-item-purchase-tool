@@ -31,15 +31,16 @@ public with sharing class UnsplashImageService {
           return (String) urls.get('regular');
         }
       } else {
-        System.debug(
-          'Unsplash API Error: ' +
-            response.getStatusCode() +
-            ' - ' +
-            response.getBody()
+        Logger.logError(
+          new CalloutException(
+            'Unsplash API call failed with status code: ' +
+            response.getStatusCode()
+          ),
+          'UnsplashImageService.fetchImageUrl'
         );
       }
     } catch (Exception e) {
-      System.debug('Callout Exception: ' + e.getMessage());
+      Logger.logError(e, 'UnsplashImageService.fetchImageUrl');
     }
 
     return null;

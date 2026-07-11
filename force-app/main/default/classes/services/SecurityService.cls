@@ -7,7 +7,7 @@ public with sharing class SecurityService {
 
   public static void requireCatalogManagerAccess(Id userId) {
     if (!canManageCatalog(userId)) {
-      throw new SecurityException(
+      throw new AuthorizationExceptions.AccessDeniedException(
         'Access Denied: Only managers can modify the catalog.'
       );
     }
