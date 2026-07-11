@@ -6,10 +6,7 @@ import ItemCreateModal from "c/itemCreateModal";
 
 import checkout from "@salesforce/apex/ItemPurchaseController.checkout";
 import createItemWithImage from "@salesforce/apex/ItemPurchaseController.createItemWithImage";
-
-import USER_ID from "@salesforce/user/Id";
-import { getRecord, getFieldValue } from "lightning/uiRecordApi";
-import IS_MANAGER_FIELD from "@salesforce/schema/User.IsManager__c";
+import checkManagerAccess from "@salesforce/apex/ItemPurchaseController.checkManagerAccess";
 
 export default class ItemPurchaseApp extends NavigationMixin(LightningElement) {
   accountId;
@@ -23,13 +20,13 @@ export default class ItemPurchaseApp extends NavigationMixin(LightningElement) {
     }
   }
 
-  @wire(getRecord, { recordId: USER_ID, fields: [IS_MANAGER_FIELD] })
-  wiredUser({ error, data }) {
-    if (data) {
-      this.isManager = getFieldValue(data, IS_MANAGER_FIELD);
+  @wire(checkManagerAccess)
+  wiredUserAccess({ error, data }) {
+    if (data !== undefined) {
+      this.isManager = data;
     } else if (error) {
-      console.error("Error fetching user data", error);
-      this.showToast("Error", "Failed to verify user permissions", "error");
+      console.error("Error verifying access", error);
+      this.isManager = false;
     }
   }
 

@@ -1,4 +1,4 @@
-public inherited sharing class UserSelector {
+public inherited sharing class UserSelector implements IUserSelector {
   public Boolean isUserManager(Id userId) {
     List<User> users = [
       SELECT IsManager__c

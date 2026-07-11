@@ -37,7 +37,7 @@ export default class ItemCreateModal extends LightningModal {
       price: parseFloat(sfFields.Price__c),
       type: sfFields.Type__c,
       family: sfFields.Family__c,
-      availableQuantity: parseInt(sfFields.AvailableQuantity__c, 18),
+      availableQuantity: parseInt(sfFields.AvailableQuantity__c, 10),
       description: sfFields.Description__c
     };
 

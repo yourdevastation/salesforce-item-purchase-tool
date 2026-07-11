@@ -1,7 +1,22 @@
 public with sharing class CheckoutService {
-  private static ItemSelector itemSelector = new ItemSelector();
-
   public static Id processCheckout(Id accountId, List<CartLineDTO> cartLines) {
+    IItemSelector itemSelector = AppFactory.getItemSelector();
+    IAccountSelector accountSelector = AppFactory.getAccountSelector();
+    ICheckoutUnitOfWork uow = AppFactory.getCheckoutUnitOfWork();
+
+    if (String.isNotBlank(accountId)) {
+      List<Account> accounts = accountSelector.getAccountByIdSafe(accountId);
+      if (accounts.isEmpty()) {
+        throw new CheckoutExceptions.InvalidAccountIdException(
+          'Invalid Account or you do not have access to it.'
+        );
+      }
+    } else {
+      throw new CheckoutExceptions.AccountIdMissingException(
+        'Account is required to checkout.'
+      );
+    }
+
     if (cartLines == null || cartLines.isEmpty()) {
       throw new CheckoutExceptions.EmptyCartException(
         'Cart is empty. Cannot proceed with checkout.'
@@ -15,12 +30,17 @@ public with sharing class CheckoutService {
       requestedQuantities.put(line.id, line.quantity);
     }
 
+    if (itemIds.size() > 100) {
+      throw new CheckoutExceptions.CartLimitExceededException(
+        'Cart is too large. Maximum 100 distinct items allowed.'
+      );
+    }
+
     Map<Id, Item__c> dbItems = new Map<Id, Item__c>(
       itemSelector.getItemsForUpdate(itemIds)
     );
 
-    CheckoutUnitOfWork uow = new CheckoutUnitOfWork();
-    uow.purchaseToInsert = new Purchase__c(ClientId__c = accountId);
+    uow.registerPurchase(new Purchase__c(ClientId__c = accountId));
 
     for (Id itemId : requestedQuantities.keySet()) {
       Item__c dbItem = dbItems.get(itemId);
@@ -29,6 +49,14 @@ public with sharing class CheckoutService {
       if (dbItem == null) {
         throw new CheckoutExceptions.ItemNotFoundException(
           'Item ' + itemId + ' no longer exists.'
+        );
+      }
+
+      if (reqQty == null || reqQty <= 0) {
+        throw new CheckoutExceptions.InvalidQuantityException(
+          'Invalid quantity for item ' +
+            dbItem.Name +
+            '. Quantity must be greater than zero.'
         );
       }
 
@@ -47,9 +75,9 @@ public with sharing class CheckoutService {
       }
 
       dbItem.AvailableQuantity__c -= reqQty;
-      uow.itemsToUpdate.add(dbItem);
+      uow.registerItemUpdate(dbItem);
 
-      uow.linesToInsert.add(
+      uow.registerPurchaseLine(
         new PurchaseLine__c(
           ItemId__c = itemId,
           Amount__c = reqQty,
@@ -60,6 +88,6 @@ public with sharing class CheckoutService {
 
     uow.commitWork();
 
-    return uow.purchaseToInsert.Id;
+    return uow.getPurchaseId();
   }
 }

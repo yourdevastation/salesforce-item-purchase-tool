@@ -1,13 +1,20 @@
 public with sharing class ItemCatalogService {
-  private static ItemSelector selector = new ItemSelector();
-  private static UserSelector userSelector = new UserSelector();
-
   public static List<ItemDTO> getFilteredItems(
     String type,
     String family,
-    String searchTerm
+    String searchTerm,
+    Integer limitSize,
+    Integer offsetSize
   ) {
-    List<Item__c> items = selector.getItemsByFilters(type, family, searchTerm);
+    IItemSelector selector = AppFactory.getItemSelector();
+
+    List<Item__c> items = selector.getItemsByFilters(
+      type,
+      family,
+      searchTerm,
+      limitSize,
+      offsetSize
+    );
     List<ItemDTO> dtos = new List<ItemDTO>();
 
     for (Item__c item : items) {
@@ -18,13 +25,12 @@ public with sharing class ItemCatalogService {
   }
 
   public static void createNewItem(ItemDTO itemDto) {
+    IItemSelector selector = AppFactory.getItemSelector();
+    IItemCatalogUnitOfWork unitOfWork = AppFactory.getItemCatalogUnitOfWork();
+
     Id currentUserId = UserInfo.getUserId();
 
-    if (!userSelector.isUserManager(currentUserId)) {
-      throw new SecurityException(
-        'Access Denied: Only managers can create items.'
-      );
-    }
+    SecurityService.requireCatalogManagerAccess(currentUserId);
 
     String imageUrl = UnsplashImageService.fetchImageUrl(itemDto.name);
 
@@ -38,6 +44,7 @@ public with sharing class ItemCatalogService {
       Image__c = imageUrl
     );
 
-    insert newItem;
+    unitOfWork.registerNew(newItem);
+    unitOfWork.commitWork();
   }
 }
