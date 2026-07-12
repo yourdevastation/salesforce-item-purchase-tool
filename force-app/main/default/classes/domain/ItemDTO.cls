@@ -1,3 +1,6 @@
+@SuppressWarnings('PMD.AvoidBooleanMethodParameters')
+// isOutOfStock is an @AuraEnabled DTO field required by the LWC client.
+// PMD incorrectly flags the Boolean constructor assignment as a "method parameter".
 public with sharing class ItemDTO {
   @AuraEnabled
   public Id id { get; set; }

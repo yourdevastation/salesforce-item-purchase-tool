@@ -1,5 +1,6 @@
 public with sharing class ItemPurchaseController {
   @AuraEnabled(cacheable=true)
+  @SuppressWarnings('PMD.ExcessiveParameterList')
   public static List<ItemDTO> getItems(
     String type,
     String family,

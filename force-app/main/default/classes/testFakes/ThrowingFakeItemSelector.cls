@@ -1,5 +1,6 @@
 @IsTest
 public class ThrowingFakeItemSelector implements IItemSelector {
+  @SuppressWarnings('PMD.ExcessiveParameterList')
   public List<Item__c> getItemsByFilters(
     String type,
     String family,

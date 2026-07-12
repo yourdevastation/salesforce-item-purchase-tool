@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
+// No DML or SOQL — tests verify factory resolution via instanceof checks only.
+// The running user identity is entirely irrelevant to these assertions.
 private class AppFactoryTest {
   @IsTest
   static void getItemSelector_returnsRealItemSelector_whenNoMockSet() {

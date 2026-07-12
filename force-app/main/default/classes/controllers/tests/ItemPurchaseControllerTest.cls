@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
+// All dependencies are replaced by Fake classes via AppFactory — no real DML/SOQL
+// is executed, so System.runAs() would not add signal to any test in this class.
 private class ItemPurchaseControllerTest {
   private class FakeUnsplashMock implements HttpCalloutMock {
     public HttpResponse respond(HttpRequest req) {

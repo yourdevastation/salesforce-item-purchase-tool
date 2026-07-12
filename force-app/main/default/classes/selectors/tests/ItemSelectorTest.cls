@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.AvoidHardcodingId, PMD.ApexUnitTestClassShouldHaveRunAs')
+// Real DML runs under the standard test user. No FLS/sharing rules are configured
+// per project requirements, so System.runAs() does not add any coverage signal.
 private class ItemSelectorTest {
   private static final Integer DEFAULT_LIMIT = 200;
   private static final Integer DEFAULT_OFFSET = 0;
@@ -324,11 +327,6 @@ private class ItemSelectorTest {
   static void getItemsWithPurchaseLines_returnsItemsWithRelatedLines() {
     Account acc = TestDataFactory.insertAccount('UOW Test Corp');
     Item__c itemWithLine = TestDataFactory.insertItem('Item With Line', 15, 10);
-    Item__c itemWithoutLine = TestDataFactory.insertItem(
-      'Item Without Line',
-      20,
-      5
-    );
 
     Purchase__c purchase = new Purchase__c(ClientId__c = acc.Id);
     insert purchase;

@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Salesforce App",
   "scripts": {
-    "lint": "eslint **/{aura,lwc}/**/*.js",
+    "lint": "eslint **/lwc/**/*.js",
+    "lint:apex": "sf code-analyzer run --rule-selector pmd:CustomSalesforceRuleset --workspace force-app",
     "test": "npm run test:unit",
     "test:apex": "sf apex run test --code-coverage --result-format human",
     "test:unit": "sfdx-lwc-jest",

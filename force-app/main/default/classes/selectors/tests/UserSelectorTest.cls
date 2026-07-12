@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.AvoidHardcodingId, PMD.ApexUnitTestClassShouldHaveRunAs')
+// Real DML runs under the standard test user. No FLS/sharing rules are configured
+// per project requirements, so System.runAs() does not add any coverage signal.
 private class UserSelectorTest {
   @IsTest
   static void isUserManager_returnsTrue_whenUserHasIsManagerTrue() {

@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
+// Smoke tests only — no DML or SOQL. Logger writes to System.debug();
+// the running user identity has no effect on logging output.
 private class LoggerTest {
   @IsTest
   static void logError_doesNotThrow_whenCalledWithValidException() {

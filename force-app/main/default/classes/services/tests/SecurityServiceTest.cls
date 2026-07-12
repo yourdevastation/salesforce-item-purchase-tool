@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
+// FakeUserSelector replaces the real UserSelector SOQL — the running user identity
+// is irrelevant, the fake always returns the configured isManagerToReturn value.
 private class SecurityServiceTest {
   @IsTest
   static void requireCatalogManagerAccess_doesNotThrow_whenUserIsManager() {

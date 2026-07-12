@@ -4,6 +4,7 @@ public class FakeItemSelector implements IItemSelector {
   public List<Item__c> itemsForUpdateToReturn = new List<Item__c>();
   public List<Item__c> itemsWithPurchaseLinesToReturn = new List<Item__c>();
 
+  @SuppressWarnings('PMD.ExcessiveParameterList')
   public List<Item__c> getItemsByFilters(
     String type,
     String family,

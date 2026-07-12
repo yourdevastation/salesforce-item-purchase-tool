@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
+// Real DML runs under the standard test user. No FLS/sharing rules are configured
+// per project requirements, so System.runAs() does not add any coverage signal.
 private class ItemTriggerHandlerTest {
   @IsTest
   static void beforeDelete_allowsDeletion_whenItemHasNoPurchaseHistory() {

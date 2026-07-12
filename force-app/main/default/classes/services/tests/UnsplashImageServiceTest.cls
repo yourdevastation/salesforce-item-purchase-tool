@@ -1,4 +1,7 @@
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
+// No DML or SOQL in this class — only HTTP callouts via HttpCalloutMock.
+// The running user identity has no effect on callout behaviour.
 private class UnsplashImageServiceTest {
   private class SuccessWithResultsMock implements HttpCalloutMock {
     public HttpResponse respond(HttpRequest req) {
