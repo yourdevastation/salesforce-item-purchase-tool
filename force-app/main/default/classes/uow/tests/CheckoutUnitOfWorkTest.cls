@@ -161,14 +161,14 @@ private class CheckoutUnitOfWorkTest {
   }
 
   @IsTest
-  static void commitWork_handles100Lines_withinGovernorLimits() {
+  static void commitWork_handles200Lines_withinGovernorLimits() {
     Account acc = TestDataFactory.insertAccount('Bulk Corp');
     Item__c item = TestDataFactory.insertItem('Bulk Item', 5.00, 200);
 
     CheckoutUnitOfWork uow = new CheckoutUnitOfWork();
     uow.registerPurchase(new Purchase__c(ClientId__c = acc.Id));
 
-    for (Integer i = 0; i < 100; i++) {
+    for (Integer i = 0; i < 200; i++) {
       uow.registerPurchaseLine(
         new PurchaseLine__c(
           ItemId__c = item.Id,
@@ -190,7 +190,7 @@ private class CheckoutUnitOfWorkTest {
       WHERE PurchaseId__c = :purchaseId
     ];
     System.assertEquals(
-      100,
+      200,
       lineCount,
       'All 100 PurchaseLines must be inserted in one commitWork'
     );

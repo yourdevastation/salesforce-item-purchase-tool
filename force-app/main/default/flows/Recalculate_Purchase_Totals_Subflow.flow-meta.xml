@@ -35,8 +35,8 @@
         <scale>2</scale>
     </formulas>
     <interviewLabel
-  >Purchase Line - After Save - Calculate Totals {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Purchase Line - After Save - Calculate Totals</label>
+  >Recalculate Purchase Totals Subflow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Recalculate Purchase Totals Subflow</label>
     <loops>
         <name>Loop_Purchase_Lines</name>
         <label>Loop Purchase Lines</label>
@@ -85,7 +85,14 @@
             <field>PurchaseId__c</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>$Record.PurchaseId__c</elementReference>
+                <elementReference>inputPurchaseId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>excludedLineId</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -105,7 +112,7 @@
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>$Record.PurchaseId__c</elementReference>
+                <elementReference>inputPurchaseId</elementReference>
             </value>
         </filters>
         <inputAssignments>
@@ -128,11 +135,22 @@
         <connector>
             <targetReference>Get_All_Purchase_Lines</targetReference>
         </connector>
-        <object>PurchaseLine__c</object>
-        <recordTriggerType>CreateAndUpdate</recordTriggerType>
-        <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <variables>
+        <name>excludedLineId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>inputPurchaseId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>var_GrandTotal</name>
         <dataType>Currency</dataType>
