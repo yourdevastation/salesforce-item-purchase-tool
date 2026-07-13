@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <environments>Default</environments>
+    <interviewLabel
+  >Purchase Line After Delete {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Purchase Line After Delete</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference
+      >Recalculate_Purchase_Totals_Subflow</targetReference>
+        </connector>
+        <object>PurchaseLine__c</object>
+        <recordTriggerType>Delete</recordTriggerType>
+        <triggerType>RecordBeforeDelete</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Recalculate_Purchase_Totals_Subflow</name>
+        <label>Recalculate Purchase Totals Subflow</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Recalculate_Purchase_Totals_Subflow</flowName>
+        <inputAssignments>
+            <name>excludedLineId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>inputPurchaseId</name>
+            <value>
+                <elementReference>$Record.PurchaseId__c</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+</Flow>

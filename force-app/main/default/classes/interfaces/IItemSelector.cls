@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD.ExcessiveParameterList')
 public interface IItemSelector {
   List<Item__c> getItemsByFilters(
     String type,

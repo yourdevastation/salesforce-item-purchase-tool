@@ -1,5 +1,6 @@
 public with sharing class ItemPurchaseController {
   @AuraEnabled(cacheable=true)
+  @SuppressWarnings('PMD.ExcessiveParameterList')
   public static List<ItemDTO> getItems(
     String type,
     String family,
@@ -17,9 +18,11 @@ public with sharing class ItemPurchaseController {
       );
     } catch (Exception e) {
       Logger.logError(e, 'ItemPurchaseController.getItems');
-      throw new AuraHandledException(
+      AuraHandledException ex = new AuraHandledException(
         'Could not load catalog items. Please try again later.'
       );
+      ex.setMessage('Could not load catalog items. Please try again later.');
+      throw ex;
     }
   }
 
@@ -28,10 +31,16 @@ public with sharing class ItemPurchaseController {
     try {
       return CheckoutService.processCheckout(accountId, cartLines);
     } catch (CheckoutExceptions.CheckoutException e) {
-      throw new AuraHandledException(e.getMessage());
+      AuraHandledException ex = new AuraHandledException(e.getMessage());
+      ex.setMessage(e.getMessage());
+      throw ex;
     } catch (Exception e) {
       Logger.logError(e, 'ItemPurchaseController.checkout');
-      throw new AuraHandledException('Internal error during checkout');
+      AuraHandledException ex = new AuraHandledException(
+        'Internal error during checkout'
+      );
+      ex.setMessage('Internal error during checkout');
+      throw ex;
     }
   }
 
@@ -41,10 +50,16 @@ public with sharing class ItemPurchaseController {
       ItemCatalogService.createNewItem(itemDto);
     } catch (AuthorizationExceptions.AuthorizationException e) {
       Logger.logError(e, 'ItemPurchaseController.createItemWithImage');
-      throw new AuraHandledException(e.getMessage());
+      AuraHandledException ex = new AuraHandledException(e.getMessage());
+      ex.setMessage(e.getMessage());
+      throw ex;
     } catch (Exception e) {
       Logger.logError(e, 'ItemPurchaseController.createItemWithImage');
-      throw new AuraHandledException('Internal error during item creation');
+      AuraHandledException ex = new AuraHandledException(
+        'Internal error during item creation'
+      );
+      ex.setMessage('Internal error during item creation');
+      throw ex;
     }
   }
 

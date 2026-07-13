@@ -1,4 +1,5 @@
 public with sharing class ItemCatalogService {
+  @SuppressWarnings('PMD.ExcessiveParameterList')
   public static List<ItemDTO> getFilteredItems(
     String type,
     String family,
@@ -25,7 +26,6 @@ public with sharing class ItemCatalogService {
   }
 
   public static void createNewItem(ItemDTO itemDto) {
-    IItemSelector selector = AppFactory.getItemSelector();
     IItemCatalogUnitOfWork unitOfWork = AppFactory.getItemCatalogUnitOfWork();
 
     Id currentUserId = UserInfo.getUserId();
